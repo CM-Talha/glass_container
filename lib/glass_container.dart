@@ -1,69 +1,68 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-// ignore: must_be_immutable
-class GlassContainer extends StatelessWidget { // simple widget for implementing glass morphism in Flutter Application
-  double shadowBlurRadius; // Shadow Blur Radius
-  double shadowSpreadRadius;// Shadow Spread Radius 
-  Color shadowColor; // Color of Shadow of Container default is white with opacity 0.2
-  double sigmax; // x value for pixel blur, default is 20
-  double sigmay;// y value for pixel blur, default is 20
-  double contHeight; // Container Height, default is set to screen size*0.4
-  double contWidth; // container width , deafault is set to screen size*0.4
-  Color contColor; // color of the container deafult is white with opacity 0.2
-  BorderRadius radius; // prefered radius of the container defalut is circular(16)
-  Color borderRadiusColor; // deafult color is white with opacity 0.2
-  Widget child; // child optional
-  GlassContainer({
-    this.contHeight,
-    this.contWidth,
-    this.contColor,
-    this.radius,
-    this.borderRadiusColor,
-    this.shadowColor,
-    this.shadowBlurRadius,
-    this.shadowSpreadRadius,
-    this.sigmax,
-    this.sigmay,
+
+class GlassContainer extends StatelessWidget {
+  final double shadowBlurRadius; // Shadow Blur Radius
+  final double shadowSpreadRadius; // Shadow Spread Radius 
+  final Color shadowColor; // Color of Shadow of Container
+  final double sigmaX; // x value for pixel blur
+  final double sigmaY; // y value for pixel blur
+  final double contHeight; // Container Height
+  final double contWidth; // Container Width
+  final Color contColor; // Color of the Container
+  final BorderRadius radius; // Preferred Radius of the Container
+  final Color borderRadiusColor; // Color of the Border Radius
+  final Widget? child; // Child Widget
+
+  const GlassContainer({
+    Key? key,
+    this.shadowBlurRadius = 24.0,
+    this.shadowSpreadRadius = 16.0,
+    this.shadowColor = const Color.fromRGBO(0, 0, 0, 0.2),
+    this.sigmaX = 20.0,
+    this.sigmaY = 20.0,
+    this.contHeight = 200.0,
+    this.contWidth = 200.0,
+    this.contColor = const Color.fromRGBO(255, 255, 255, 0.3),
+    this.radius = const BorderRadius.all(Radius.circular(16.0)),
+    this.borderRadiusColor = const Color.fromRGBO(255, 255, 255, 0.3),
     this.child,
-  });
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          blurRadius: shadowBlurRadius == null ? 24 : shadowBlurRadius,
-          spreadRadius: shadowSpreadRadius == null ? 16 : shadowSpreadRadius,
-          color: shadowColor == null
-              ? Colors.black.withOpacity(0.2)
-              : shadowColor,
-        )
-      ]),
-      child: ClipRRect(
-        borderRadius: radius == null ? BorderRadius.circular(16) : radius,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: sigmax == null ? 20 : sigmax,
-            sigmaY: sigmay == null ? 20 : sigmay,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            blurRadius: shadowBlurRadius,
+            spreadRadius: shadowSpreadRadius,
+            color: shadowColor,
           ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: radius,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY),
           child: Container(
-            height: contHeight == null
-                ? MediaQuery.of(context).size.width * 0.4
-                : contHeight,
-            width: contWidth == null
-                ? MediaQuery.of(context).size.height * 0.4
-                : contWidth,
+            height: contHeight,
+            width: contWidth,
             decoration: BoxDecoration(
-                color: contColor == null
-                    ? Colors.white.withOpacity(0.3)
-                    : contColor,
-                borderRadius:
-                    radius == null ? BorderRadius.circular(16) : radius,
-                border: Border.all(
-                  width: 1.5,
-                  color: borderRadiusColor == null
-                      ? Colors.white.withOpacity(0.3)
-                      : borderRadiusColor,
-                )),
+              gradient: LinearGradient(
+                colors: [
+                  contColor,
+                  contColor.withOpacity(0.1),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: radius,
+              border: Border.all(
+                width: 1.5,
+                color: borderRadiusColor,
+              ),
+            ),
             child: child,
           ),
         ),
